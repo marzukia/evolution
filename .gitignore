@@ -5,6 +5,8 @@ __pycache__/
 *.jpg
 env/*
 results/*
+.vscode/
+README.md
 
 # C extensions
 *.so

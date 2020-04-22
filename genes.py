@@ -19,7 +19,7 @@ src_pixels: Pixels = np.array(src)
 colours: Colours = [[255, 0, 0], [0, 255, 0], [0, 0, 255]]
 size: Size = src.size
 (width, height) = size
-mutation_chance: float = 0.10
+mutation_chance: float = 0.25
 generations: int = 10000
 pool_size: int = 24
 processes: int = 24
@@ -102,8 +102,9 @@ if __name__ == '__main__':
         )
 
         if (generation + 1) % 50 == 0:
-            print(f'generation {generation + 1}')
+            genes.sort(key=lambda gene: gene.loss)
             best_gene = genes[0].pixels
+            print(f'generation {generation + 1}, {genes[0].loss}')
             result = Image.fromarray(best_gene)
             result.save(f'results/result-gen-{generation + 1}.png')
 
