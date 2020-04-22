@@ -48,7 +48,7 @@ class Gene:
         sum_loss: LossSum = np.zeros((3))
         for w in range(width):
             for h in range(height):
-                loss = abs(src_pixels[w][h] - self.pixels[w][h]) ** 2
+                loss = src_pixels[w][h] - self.pixels[w][h] ** 2
                 sum_loss += loss
         return np.sum(sum_loss)
 
@@ -58,11 +58,9 @@ def pixel_selection(father_pixels: Colour, mother_pixels: Colour):
         return (father_pixels + mother_pixels) / 2
     else:
         r = random()
-        while r == 0.5:
-            r = random()
-        if r > 0.5:
+        if r >= 0.5:
             return father_pixels
-        elif r < 0.5:
+        elif r <= 0.5:
             return mother_pixels
 
 
@@ -101,8 +99,9 @@ if __name__ == '__main__':
             [(father, mother) for i in range(pool_size)]
         )
 
-        if (generation + 1) % 50 == 0:
+        if (generation + 1) % 10 == 0:
             genes.sort(key=lambda gene: gene.loss)
+            print([i.loss for i in genes])
             best_gene = genes[0].pixels
             print(f'generation {generation + 1}, {genes[0].loss}')
             result = Image.fromarray(best_gene)
