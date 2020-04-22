@@ -121,12 +121,18 @@ def record_generation(
     parents: List[Gene], generation: int, starting_time: float
 ) -> None:
     best_gene = parents[0]
-    loss = best_gene.loss
+    loss = round(best_gene.loss, 4)
     pixels = best_gene.pixels
     elapsed_time = round(time() - starting_time, 4)
+    gen_ps = round(generation / elapsed_time, 2)
     result = Image.fromarray(pixels)
     result.save(f'results/result-gen-{generation}.png')
-    print(f'generation {generation}, loss {loss}, time {elapsed_time}')
+    print(
+        f'generation {generation}',
+        f'loss {loss}',
+        f'time {elapsed_time}',
+        f'g/s {gen_ps}'
+    )
     return
 
 
