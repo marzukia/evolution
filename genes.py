@@ -57,9 +57,8 @@ def pixel_selection(father_pixels: Colour, mother_pixels: Colour):
     mutated_gene = np.empty((3), dtype=np.uint8)
     if random() <= mutation_chance:
         for n in range(0, 2):
-            values = [father_pixels[n], mother_pixels[n]]
-            values.sort()
-            mutated_gene[n] = randint(values[0], values[-1])
+            values = np.array([father_pixels[n], mother_pixels[n]])
+            mutated_gene[n] = randint(np.min(values), np.max(values))
         return np.array(mutated_gene, dtype=np.uint8)
     else:
         r = random()
