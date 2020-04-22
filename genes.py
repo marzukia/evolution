@@ -13,7 +13,7 @@ Pixels = NDArray[(Any, Any, 3), Colour]
 LossSum = NDArray[(3), int]
 
 # Program Parameters
-src_filepath: str = 'src.jpg'
+src_filepath: str = 'dog.png'
 src = Image.open(src_filepath)
 src_pixels: Pixels = np.array(src)
 colours: Colours = [[255, 0, 0], [0, 255, 0], [0, 0, 255]]
@@ -92,8 +92,8 @@ if __name__ == '__main__':
 
     for generation in range(0, generations):
         genes.sort(key=lambda gene: gene.loss)
-        genes: List[Gene] = genes[0:2]
-        father, mother = genes[0], genes[1]
+        genes: List[Gene] = genes[0:4]
+        father, mother = genes[randint(0, 3)], genes[randint(0, 3)]
         genes: List[Gene] = pool.map(
             mate_genes,
             [(father, mother) for i in range(pool_size)]
