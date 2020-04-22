@@ -16,13 +16,13 @@ LossSum = NDArray[(3), int]
 src_filepath: str = 'dog.jpg'
 src = Image.open(src_filepath)
 src_pixels: Pixels = np.array(src)
-colours: Colours = [[255, 0, 0], [0, 255, 0], [0, 0, 255]]
+colours: Colours = [[255, 255, 0], [0, 255, 255], [255, 0, 255]]
 size: Size = src.size
 (width, height) = size
-mutation_chance: float = 0.25
+mutation_chance: float = 0.30
 generations: int = 10000
-pool_size: int = 128
-processes: int = 18
+pool_size: int = 20
+processes: int = 20
 
 
 class Gene:
@@ -54,8 +54,13 @@ class Gene:
 
 
 def pixel_selection(father_pixels: Colour, mother_pixels: Colour):
+    mutated_gene = np.empty((3), dtype=np.uint8)
     if random() <= mutation_chance:
-        return np.array([randint(0, 255), randint(0, 255), randint(0, 255)])
+        for n in range(0, 2):
+            values = [father_pixels[n], mother_pixels[n]]
+            values.sort()
+            mutated_gene[n] = randint(values[0], values[-1])
+        return np.array(mutated_gene, dtype=np.uint8)
     else:
         r = random()
         if r >= 0.5:
@@ -92,12 +97,12 @@ if __name__ == '__main__':
 
     for generation in range(0, generations):
         genes.sort(key=lambda gene: gene.loss)
-        genes: List[Gene] = genes[0:10]
-        father, mother = genes[randint(0, 3)], genes[randint(0, 3)]
+        genes: List[Gene] = genes[0:3]
 
         offspring: List[Gene] = pool.map(
             mate_genes,
-            [(father, mother) for i in range(pool_size)]
+            [(genes[randint(0, 2)],
+              genes[randint(0, 2)]) for i in range(pool_size)]
         )
         offspring.sort(key=lambda gene: gene.loss)
         genes = offspring
