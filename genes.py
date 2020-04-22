@@ -55,7 +55,7 @@ class Gene:
 
 def pixel_selection(father_pixels: Colour, mother_pixels: Colour):
     if random() <= mutation_chance:
-        return (father_pixels + mother_pixels) / 2
+        return np.array([randint(0, 255), randint(0, 255), randint(0, 255)])
     else:
         r = random()
         if r >= 0.5:
@@ -94,10 +94,14 @@ if __name__ == '__main__':
         genes.sort(key=lambda gene: gene.loss)
         genes: List[Gene] = genes[0:4]
         father, mother = genes[randint(0, 3)], genes[randint(0, 3)]
-        genes: List[Gene] = pool.map(
+
+        offspring: List[Gene] = pool.map(
             mate_genes,
             [(father, mother) for i in range(pool_size)]
         )
+        offspring.sort(key=lambda gene: gene.loss)
+        if offspring[0].loss < genes[0].loss:
+            genes = offspring
 
         if (generation + 1) % 10 == 0:
             genes.sort(key=lambda gene: gene.loss)
