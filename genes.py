@@ -139,21 +139,23 @@ if __name__ == '__main__':
         range(mating_pool)
     )
     genes.sort(key=lambda gene: gene.loss)
-    loss = genes[0].loss
+    loss: float = genes[0].loss
 
-    generation = 0
+    generation: int = 0
     while loss > target_loss:
         if ((generation) % reporting_frequency == 0) or (generation == 0):
             record_generation(genes, generation)
 
-        selected_parents = [genes[n] for n in range(parent_selection)]
-        offspring: List[Gene] = pool.starmap(
+        selected_parents: List[Gene] = [
+            genes[n] for n in range(parent_selection)
+        ]
+        offspring: List[List[Gene]] = pool.starmap(
             mate_genes, zip(
                 selected_parents,
                 repeat(selected_parents, parent_selection)
             )
         )
-        offspring = [i for j in offspring for i in j]
+        offspring: List[Gene] = [i for j in offspring for i in j]
         offspring.sort(key=lambda gene: gene.loss)
         if offspring[0].loss < selected_parents[0].loss:
             genes = offspring
