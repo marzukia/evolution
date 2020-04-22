@@ -6,6 +6,7 @@ from nptyping import NDArray
 from PIL import Image
 from random import randint, random
 import numpy as np
+from time import time
 
 from multiprocessing import Pool
 from itertools import repeat
@@ -25,7 +26,7 @@ colours: Colours = [[255, 0, 0], [0, 255, 0], [0, 0, 255]]
 size: Size = src.size
 (width, height) = size
 mutation_chance: float = 0.01
-mating_pool: int = 100
+mating_pool: int = 256
 parent_selection: int = int(np.sqrt(mating_pool))
 
 # Performance Parameters
@@ -116,13 +117,16 @@ def mate_genes(father: Gene, mothers: List[Gene]) -> List[Gene]:
     return offspring_genes
 
 
-def record_generation(parents: List[Gene], generation: int) -> None:
+def record_generation(
+    parents: List[Gene], generation: int, starting_time: float
+) -> None:
     best_gene = parents[0]
     loss = best_gene.loss
     pixels = best_gene.pixels
+    elapsed_time = round(time() - starting_time, 4)
     result = Image.fromarray(pixels)
     result.save(f'results/result-gen-{generation}.png')
-    print(f'generation {generation}, loss {loss}')
+    print(f'generation {generation}, loss {loss}, time {elapsed_time}')
     return
 
 
@@ -141,10 +145,11 @@ if __name__ == '__main__':
     genes.sort(key=lambda gene: gene.loss)
     loss: float = genes[0].loss
 
+    starting_time: float = time()
     generation: int = 0
     while loss > target_loss:
         if ((generation) % reporting_frequency == 0) or (generation == 0):
-            record_generation(genes, generation)
+            record_generation(genes, generation, starting_time)
 
         selected_parents: List[Gene] = [
             genes[n] for n in range(parent_selection)
@@ -165,4 +170,4 @@ if __name__ == '__main__':
     pool.close()
     pool.join()
 
-    record_generation(genes, generation)
+    record_generation(genes, generation, starting_time)
