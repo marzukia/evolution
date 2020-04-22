@@ -21,8 +21,8 @@ size: Size = src.size
 (width, height) = size
 mutation_chance: float = 0.25
 generations: int = 10000
-pool_size: int = 24
-processes: int = 24
+pool_size: int = 128
+processes: int = 18
 
 
 class Gene:
@@ -92,7 +92,7 @@ if __name__ == '__main__':
 
     for generation in range(0, generations):
         genes.sort(key=lambda gene: gene.loss)
-        genes: List[Gene] = genes[0:4]
+        genes: List[Gene] = genes[0:10]
         father, mother = genes[randint(0, 3)], genes[randint(0, 3)]
 
         offspring: List[Gene] = pool.map(
@@ -100,8 +100,7 @@ if __name__ == '__main__':
             [(father, mother) for i in range(pool_size)]
         )
         offspring.sort(key=lambda gene: gene.loss)
-        if offspring[0].loss < genes[0].loss:
-            genes = offspring
+        genes = offspring
 
         if (generation + 1) % 10 == 0:
             genes.sort(key=lambda gene: gene.loss)
