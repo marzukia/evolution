@@ -21,7 +21,7 @@ size: Size = src.size
 (width, height) = size
 mutation_chance: float = 0.30
 generations: int = 10000
-pool_size: int = 20
+pool_size: int = 100
 processes: int = 20
 
 
