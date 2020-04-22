@@ -13,7 +13,7 @@ Pixels = NDArray[(Any, Any, 3), Colour]
 LossSum = NDArray[(3), int]
 
 # Program Parameters
-src_filepath: str = 'dog.png'
+src_filepath: str = 'dog.jpg'
 src = Image.open(src_filepath)
 src_pixels: Pixels = np.array(src)
 colours: Colours = [[255, 0, 0], [0, 255, 0], [0, 0, 255]]
@@ -101,7 +101,6 @@ if __name__ == '__main__':
 
         if (generation + 1) % 10 == 0:
             genes.sort(key=lambda gene: gene.loss)
-            print([i.loss for i in genes])
             best_gene = genes[0].pixels
             print(f'generation {generation + 1}, {genes[0].loss}')
             result = Image.fromarray(best_gene)
